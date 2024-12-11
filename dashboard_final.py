@@ -68,7 +68,7 @@ tab = st.radio("Selecione a visualização:", ["Programas de Crédito", "Acredit
 if tab == "Programas de Crédito":
     st.header("Programas de Crédito")
     programa_select = st.selectbox("Selecione um programa", ["Todos"] + list(df_programas["Programa"].unique()))
-    
+
     if programa_select == "Todos":
         df_programas_filtered = df_programas
         df_detalhamento_filtered = df_detalhamento
@@ -86,6 +86,10 @@ if tab == "Programas de Crédito":
     st.plotly_chart(px.bar(df_detalhamento_filtered, x="Instituição", y="Operações", title="Operações por Instituição", text="Operações"))
     st.plotly_chart(px.bar(df_detalhamento_filtered, x="Instituição", y="Valor Total (R$)", title="Valores Totais por Instituição", text="Valor Total (R$)"))
     st.plotly_chart(px.bar(df_detalhamento_filtered, x="Programa", y="Operações", title="Operações Consolidadas por Programa", text="Operações"))
+
+    # Gráficos de pizza
+    st.plotly_chart(px.pie(df_programas_filtered, names="Programa", values="Operações", title="Proporção de Operações por Programa"))
+    st.plotly_chart(px.pie(df_programas_filtered, names="Programa", values="Valor Total (R$)", title="Proporção de Valores Totais por Programa"))
 
 elif tab == "Acredita no Primeiro Passo":
     st.header("Acredita no Primeiro Passo")
@@ -106,6 +110,10 @@ elif tab == "Acredita no Primeiro Passo":
     st.plotly_chart(px.bar(df_bancos_filtered, x="Banco", y="Valor Total (R$)", title="Valor Total por Banco"))
     st.plotly_chart(px.bar(df_bancos_filtered, x="UF", y="Total de Operações", title="Distribuição de Operações por Estado"))
 
+    # Gráficos de pizza
+    st.plotly_chart(px.pie(df_bancos_filtered, names="UF", values="Total de Operações", title="Proporção de Operações por Estado"))
+    st.plotly_chart(px.pie(df_bancos_filtered, names="UF", values="Valor Total (R$)", title="Proporção de Valores Totais por Estado"))
+
 elif tab == "PROCRED 360":
     st.header("PROCRED 360")
     ufs_select = st.multiselect("Selecione os estados", ["Todos"] + list(df_procred["UF"].unique()), default=["Todos"])
@@ -123,4 +131,8 @@ elif tab == "PROCRED 360":
     st.plotly_chart(px.bar(df_procred_filtered, x="UF", y="Valor Total (R$)", title="Valores Totais por Estado"))
     st.plotly_chart(px.bar(df_procred_filtered, x="UF", y="Total de Operações", title="Distribuição de Operações por UF"))
     st.plotly_chart(px.bar(df_procred_filtered, x="UF", y="Valor Total (R$)", title="Distribuição de Valores Totais por UF"))
-    st.plotly_chart(px.bar(df_procred_filtered, x="UF", y="Valor Total (R$)", title="Valores Médios por UF"))
+    st.plotly_chart(px.bar(df_procred_filtered, x="UF", y=df_procred_filtered["Valor Total (R$)"] / df_procred_filtered["Total de Operações"], title="Valores Médios por UF"))
+
+    # Gráficos de pizza
+    st.plotly_chart(px.pie(df_procred_filtered, names="UF", values="Total de Operações", title="Proporção de Operações por Estado"))
+    st.plotly_chart(px.pie(df_procred_filtered, names="UF", values="Valor Total (R$)", title="Proporção de Valores Totais por Estado"))
